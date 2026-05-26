@@ -4,10 +4,36 @@ const { Resend } = require("resend");
 require("dotenv").config();
 
 const app = express();
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-app.use(cors());
+/* =========================
+   CORS
+========================= */
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://houseofyaa.com",
+      "https://www.houseofyaa.com",
+    ],
+  })
+);
+
 app.use(express.json());
+
+/* =========================
+   HEALTH CHECK
+========================= */
+
+app.get("/", (req, res) => {
+  res.send("House of YAA API is running");
+});
+
+/* =========================
+   CONTACT ROUTE
+========================= */
 
 app.post("/send-mail", async (req, res) => {
   try {
@@ -15,22 +41,64 @@ app.post("/send-mail", async (req, res) => {
 
     const data = await resend.emails.send({
       from: "House of YAA <onboarding@resend.dev>",
+
+      // YOUR RECEIVING EMAIL
       to: "darnielipogah@gmail.com",
-      subject: `New Message from ${name}`,
+
+      subject: `New House of YAA Inquiry from ${name}`,
+
       html: `
-        <h2>House of YAA Contact</h2>
-        <p><b>Name:</b> ${name}</p>
-        <p><b>Email:</b> ${email}</p>
-        <p><b>Message:</b> ${message}</p>
+        <div style="font-family: Arial, sans-serif; padding: 20px; color: #111;">
+          
+          <h1 style="color:#D4AF37;">
+            House of YAA Contact
+          </h1>
+
+          <hr />
+
+          <p>
+            <strong>Name:</strong>
+            ${name}
+          </p>
+
+          <p>
+            <strong>Email:</strong>
+            ${email}
+          </p>
+
+          <p>
+            <strong>Message:</strong>
+          </p>
+
+          <div style="margin-top:10px;">
+            ${message}
+          </div>
+
+        </div>
       `,
     });
 
-    res.json({ success: true, data });
+    return res.status(200).json({
+      success: true,
+      data,
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
   }
 });
 
-app.listen(5000, () =>
-  console.log("Server running on http://localhost:5000")
-);
+/* =========================
+   PORT
+========================= */
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`House of YAA server running on port ${PORT}`);
+});
