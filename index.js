@@ -43,7 +43,7 @@ app.post("/send-mail", async (req, res) => {
       from: "House of YAA <onboarding@resend.dev>",
 
       // YOUR RECEIVING EMAIL
-      to: "darnielipogah@gmail.com",
+      to: "nishapratt@yahoo.com",
 
       subject: `New House of YAA Inquiry from ${name}`,
 
