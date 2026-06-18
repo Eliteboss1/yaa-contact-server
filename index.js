@@ -40,10 +40,10 @@ app.post("/send-mail", async (req, res) => {
     const { name, email, message } = req.body;
 
     const data = await resend.emails.send({
-      from: "House of YAA <onboarding@resend.dev>",
+      from: "House of YAA <admin@houseofyaa.com>",
 
       // YOUR RECEIVING EMAIL
-      to: "Admin@houseofyaa.com",
+      to: "admin@houseofyaa.com",
 
       subject: `New House of YAA Inquiry from ${name}`,
 
